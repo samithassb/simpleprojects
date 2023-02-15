@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 typedef struct contact
 {
@@ -104,4 +105,54 @@ char *get_answer(char *prompt)
 	scanf("%s", answer);
 
 	return answer;
+}
+
+int list_all_contact()
+{
+	printf("Name,Number,Email,Address\n");
+
+	FILE *contact_book = fopen("contact.csv", "r");
+	if(contact_book==NULL){
+		printf("Error! occured while opening csv file");
+		return 1;
+	}
+	char detail[100];
+	while(fgets(detail,100,contact_book)!=EOF){
+		detail[strcspn(detail,'\n')]=0;
+		printf("%s\n\n",detail);
+	}
+	fclose(contact_book);
+	return 0;
+}
+
+int search_for_contact()
+{
+	char *name;
+	name = get_answer("What contact you are looking for: ");
+
+
+	FILE *contact_book = fopen("contact.csv", "r");
+	if(contact_book==NULL){
+		printf("Error! occured while opening csv file");
+		return 1;
+	}
+	char detail[100];
+	while(fgets(detail,100,contact_book)!=EOF){
+		size_t index = strcspn(detail,',');
+		char fname[index+1];    
+
+		for(int i=0;i<index;i++){
+			fname[i]=detail[i];
+		}
+
+		if(strcmp(fname,name) == 0){
+			printf("%s\n",detail);
+		}else{
+			printf("Sorry! couldn't find number")
+		}
+		fname[0]=0;
+
+	}
+	fclose(contact_book);
+	return 0;
 }
